@@ -262,6 +262,14 @@ async function loaded(bodyParts) {
     u_lip
   ] = bodyParts; //making each in the array into saperated variables
   console.log(l_lip);
+  // imageMode(CENTER);
+  // image(
+  //   hair,
+  //   width / 2 - hair.width / 5 / 2,
+  //   height / 2 - hair.height / 5 / 2,
+  //   hair.width / 5,
+  //   hair.height / 5
+  // );
   // template -> take the variable -> then send to tensorflow to draw
 }
 function setup() {
@@ -276,16 +284,15 @@ function setup() {
     .slice(2, -1)
     .map((x) => x.split(".jpg ").map((y, i) => (i === 0 ? y : y.split(" ")))); //.split(",").map(Number)
   // malePose = pose.filter((x) => );
-  tiltRight = pose.filter((x) => x[1][0] <= -23);
-  tiltLeft = pose.filter((x) => x[1][0] >= 23);
-  frontal = pose.filter((x) => x[1][0] < 23 && x[1][0] > -23);
+  tiltRight = pose.filter((x) => x[1][0] <= -32);
+  tiltLeft = pose.filter((x) => x[1][0] >= 32);
+  frontal = pose.filter((x) => x[1][0] < 32 && x[1][0] > -32);
   anno = anno
     .slice(2, -1)
     .map((x) => x.split("  ").map((y, i) => (i === 0 ? y : y.split(" ")))); //delete first 2 and last 1 elements
   males = anno.filter((x) => x[1][maleCat] === "1"); //only get those who have male attribute = 1
-  attractiveMales = males
-    .filter((x) => x[1][attractiveIndex] === "1")
-    .slice(0, 14);
+  attractiveMales = males.filter((x) => x[1][attractiveIndex] === "1");
+  // .slice(0, 14);
   // females = anno.filter((x) => x[1][maleCat] === "-1"); //only get those who have male attribute = -1
   // dude = random(males);
   // dudeHair = hairCat.map((x) => dude[1][x]); // get an array[10] (10:number of SubHair) of 1 or -1
@@ -312,9 +319,9 @@ function setup() {
       ".png"
     );
   });
-  Promise.all(randomParts.map(asyncP5LoadImage)).then((randomPartImages) => {
-    loaded(randomPartImages);
-  });
+  // Promise.all(randomParts.map(asyncP5LoadImage)).then((randomPartImages) => {
+  //   loaded(randomPartImages);
+  // });
   let randomAttractMale = random(attractiveMales);
   let randomAttractMaleNumber = randomAttractMale[0].split(".jpg")[0];
   console.log(randomParts);
@@ -327,7 +334,11 @@ function setup() {
 
   // console.log(random(attractiveMales)[0]); //length = 3437
   // console.log(males); //length = 11057
-  // console.log(tiltRight);
+  const tiltRightNum = tiltRight.map((x) => x[0] + ".jpg");
+  console.log(
+    "hi",
+    attractiveMales.filter((x) => tiltRightNum.includes(x[0]))
+  );
 }
 
 function draw() {
